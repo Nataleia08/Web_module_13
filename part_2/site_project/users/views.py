@@ -64,3 +64,5 @@ def script(request):
         User.objects.get_or_create(first_name=us["nickname"], email=us["email"], username=us["login"])
 
     return redirect(to='quotes_list:main')
+
+
