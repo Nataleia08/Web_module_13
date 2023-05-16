@@ -17,6 +17,7 @@ passlib = {extras = ["bcrypt"], version = "*"}
 pydantic = {extras = ["email"], version = "*"}
 fastapi-mail = "*"
 jose = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
