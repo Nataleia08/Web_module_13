@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-import redis
+import redis.asyncio as redis
 
 from database.db import get_db
 from repository import users as repository_users

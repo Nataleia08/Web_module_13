@@ -18,6 +18,8 @@ pydantic = {extras = ["email"], version = "*"}
 fastapi-mail = "*"
 jose = "*"
 python-dotenv = "*"
+fastapi-limiter = "*"
+cloudinary = "*"
 
 [dev-packages]
 

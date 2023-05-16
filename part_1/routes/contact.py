@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, date
 from typing import List
 from sqlalchemy import and_
 from services.auth import auth_service
+from ratelimiter import RateLimiter
 
 router = APIRouter(prefix='/contacts', tags=["contacts"])
 
@@ -31,20 +32,20 @@ async def create_user(body:ContactModel, current_user: User = Depends(auth_servi
     return new_contact
 
 
-@router.get("/", response_model=List[ContactResponse])
+@router.get("/", response_model=List[ContactResponse], dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def read_users(skip: int = 0, limit: int = Query(default=10, le=100, ge=10), current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     list_contacts = db.query(Contact).filter(Contact.user_id == current_user.id).offset(skip).limit(limit).all()
     return list_contacts
 
 
-@router.get("/{contact_id}", response_model=ContactResponse)
+@router.get("/{contact_id}", response_model=ContactResponse, dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def read_user(contact_id: int = Path(description="The ID of the contact", ge=1), current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     search_contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == current_user.id)).first()
     if search_contact is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Not found')
     return search_contact
 
-@router.put("/{contact_id}", response_model=ContactResponse)
+@router.put("/{contact_id}", response_model=ContactResponse, dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def update_user(body:ContactModel, contact_id: int = Path(description="The ID of the user", ge=1), current_user: User = Depends(auth_service.get_current_user),  db: Session = Depends(get_db)):
     new_contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == current_user.id)).first()
     if new_contact is None:
@@ -61,7 +62,7 @@ async def update_user(body:ContactModel, contact_id: int = Path(description="The
     db.refresh(new_contact)
     return new_contact
 
-@router.patch("/{contact_id}", response_model=ContactResponse)
+@router.patch("/{contact_id}", response_model=ContactResponse, dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def update_user(email: str = None, first_name: str = None, last_name: str = None, day_birthday: date = None, phone_number: str = None, contact_id: int = Path(description="The ID of the user", ge=1), current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     new_contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == current_user.id)).first()
     if new_contact is None:
@@ -84,7 +85,7 @@ async def update_user(email: str = None, first_name: str = None, last_name: str 
     return new_contact
 
 
-@router.delete("/{contact_id}")
+@router.delete("/{contact_id}", dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def delete_user(contact_id: int = Path(description="The ID of the user", ge=1), current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     delete_contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == current_user.id)).first()
     if delete_contact is None:
@@ -93,7 +94,7 @@ async def delete_user(contact_id: int = Path(description="The ID of the user", g
     db.commit()
 
 
-@router.get("/birthdays")
+@router.get("/birthdays", dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def read_users(days:int = 7, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     list_contacts = []
     for i in range(days):
@@ -103,22 +104,22 @@ async def read_users(days:int = 7, current_user: User = Depends(auth_service.get
     return list_contacts
 
 
-@router.get("/search/email", response_model=List[ContactResponse])
+@router.get("/search/email", response_model=List[ContactResponse], dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def search_users(email: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     list_contacts = db.query(Contact).filter(and_(Contact.email == email, Contact.user_id == current_user.id)).all()
     return list_contacts
 
-@router.get("/search/first_name", response_model=List[ContactResponse])
+@router.get("/search/first_name", response_model=List[ContactResponse], dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def search_users(first_name: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     list_contacts = db.query(Contact).filter(and_(Contact.first_name == first_name, Contact.user_id == current_user.id)).all()
     return list_contacts
 
-@router.get("/search/last_name", response_model=List[ContactResponse])
+@router.get("/search/last_name", response_model=List[ContactResponse], dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def search_users(last_name: str, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     list_contacts = db.query(Contact).filter(and_(Contact.last_name == last_name, Contact.user_id == current_user.id)).all()
     return list_contacts
 
-@router.get("/search", response_model=List[ContactResponse])
+@router.get("/search", response_model=List[ContactResponse], dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def search_users(email: str = None, first_name: str = None, last_name: str = None, current_user: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
     if email and first_name and last_name:
         list_contacts = db.query(Contact).filter(and_(Contact.email == email, Contact.last_name == last_name, Contact.first_name == first_name, Contact.user_id == current_user.id)).all()
