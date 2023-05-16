@@ -4,11 +4,11 @@ from fastapi import APIRouter, HTTPException, Depends, status, Security, Backgro
 from fastapi.security import OAuth2PasswordRequestForm, HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
-from part_1.database.db import get_db
-from part_1.schemas import UserAuthModel, UserAuthResponse, TokenModel, RequestEmail
-from part_1.repository import users as repository_users
-from part_1.services.auth import auth_service
-from part_1.services.email import send_email
+from database.db import get_db
+from schemas import UserAuthModel, UserAuthResponse, TokenModel, RequestEmail
+from repository import users as repository_users
+from services.auth import auth_service
+from services.email import send_email
 
 router = APIRouter(prefix='/auth', tags=["auth"])
 security = HTTPBearer()
@@ -72,7 +72,7 @@ async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, r
                         db: Session = Depends(get_db)):
     user = await repository_users.get_user_by_email(body.email, db)
 
-    if user.confirmed:
+    if user.confirmed_email:
         return {"message": "Your email is already confirmed"}
     if user:
         background_tasks.add_task(send_email, user.email, user.username, request.base_url)

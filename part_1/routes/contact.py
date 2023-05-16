@@ -2,13 +2,13 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 from repository.users import birthday_in_this_year
 from fastapi import FastAPI, Path, Query, Depends, HTTPException, status
-from part_1.schemas import ContactResponse, ContactModel
-from part_1.database.db import get_db
-from part_1.database.models import User, Contact
+from schemas import ContactResponse, ContactModel
+from database.db import get_db
+from database.models import User, Contact
 from datetime import datetime, timedelta, date
 from typing import List
 from sqlalchemy import and_
-from part_1.services.auth import auth_service
+from services.auth import auth_service
 
 router = APIRouter(prefix='/contacts', tags=["contacts"])
 
