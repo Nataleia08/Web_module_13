@@ -19,7 +19,7 @@ def root():
     return {"message": "Welcome to API!"}
 
 
-@router.post("/", response_model=ContactResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=ContactResponse, status_code=status.HTTP_201_CREATED, dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def create_user(body:ContactModel, current_user: User = Depends(auth_service.get_current_user), db:Session = Depends(get_db)):
     new_contact = db.query(Contact).filter(and_(Contact.email == body.email, Contact.user_id == current_user.id)).first()
     if new_contact:

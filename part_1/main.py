@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import auth, contact
+from routes import auth, contact, users
 from fastapi_limiter import FastAPILimiter
 from conf.config import settings
 import redis.asyncio as redis
@@ -9,6 +9,7 @@ app = FastAPI()
 
 app.include_router(auth.router, prefix='/api')
 app.include_router(contact.router, prefix='/api')
+app.include_router(users.router, prefix='/api')
 
 @app.on_event("startup")
 async def startup():
