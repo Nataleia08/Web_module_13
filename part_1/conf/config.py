@@ -3,13 +3,13 @@ from pydantic import BaseSettings
 
 class Settings(BaseSettings):
     sqlalchemy_database_url: str
-    secret_key: str
-    algorithm: str
-    mail_username: str
-    mail_password: str
-    mail_from: str
-    mail_port: int
-    mail_server: str
+    secret_key: str = "sekret"
+    algorithm: str = "H256"
+    mail_username: str = "example@gmail.com"
+    mail_password: str = "password"
+    mail_from: str = ""
+    mail_port: int = 465
+    mail_server: str = ""
     redis_host: str = 'localhost'
     redis_port: int = 6379
     cloudinary_name: str

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from routes import auth, contact, users
+from part_1.routes import auth, contact, users
 from fastapi_limiter import FastAPILimiter
-from conf.config import settings
+from part_1.conf.config import settings
 import redis.asyncio as redis
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,11 +17,11 @@ async def startup():
                           decode_responses=True)
     await FastAPILimiter.init(r)
 
-origins = ["http://localhost:3000"]
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["http://localhost:8000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -20,6 +20,7 @@ jose = "*"
 python-dotenv = "*"
 fastapi-limiter = "*"
 cloudinary = "*"
+ratelimiter = "*"
 
 [dev-packages]
 

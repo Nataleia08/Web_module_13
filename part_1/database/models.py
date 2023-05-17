@@ -1,5 +1,5 @@
 from sqlalchemy import Boolean, Column, func, DateTime, Integer, String, Date, ForeignKey
-from database.db import Base, engine
+from part_1.database.db import Base, engine
 from sqlalchemy.orm import relationship
 
 class Contact(Base):
