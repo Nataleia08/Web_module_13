@@ -2,14 +2,14 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    sqlalchemy_database_url: str = "postgresql+psycopg2://USER:PASSWORD@localhost:PORT/DB"
+    sqlalchemy_database_url: str = "postgresql+psycopg2://postgres:1234567890@localhost:5432/postgres"
     secret_key: str = "secret"
-    algorithm: str = "H256"
-    mail_username: str = "example@gmail.com"
+    algorithm: str = "HS256"
+    mail_username: str = "example@meta.ua"
     mail_password: str = "password"
-    mail_from: str = ""
+    mail_from: str = "example@meta.ua"
     mail_port: int = 465
-    mail_server: str = ""
+    mail_server: str = "smtp.meta.ua"
     redis_host: str = 'localhost'
     redis_port: int = 6379
     cloudinary_name: str = "name"

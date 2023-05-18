@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, date
 from typing import List
 from sqlalchemy import and_
 from part_1.services.auth import auth_service
-from ratelimiter import RateLimiter
+from fastapi_limiter.depends import RateLimiter
 
 router = APIRouter(prefix='/contacts', tags=["contacts"])
 
