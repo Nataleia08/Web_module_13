@@ -11,6 +11,7 @@ import redis.asyncio as redis
 from part_1.database.db import get_db
 from part_1.repository import users as repository_users
 from part_1.conf.config import settings
+import pickle
 
 
 class Auth:
@@ -25,6 +26,7 @@ class Auth:
 
     def get_password_hash(self, password: str):
         return self.pwd_context.hash(password)
+
 
     # define a function to generate a new access token
     async def create_access_token(self, data: dict, expires_delta: Optional[float] = None):
@@ -80,6 +82,15 @@ class Auth:
         user = await repository_users.get_user_by_email(email, db)
         if user is None:
             raise credentials_exception
+        user = self.r.get(f"user:{email}")
+        if user is None:
+            user = await repository_users.get_user_by_email(email, db)
+            if user is None:
+                raise credentials_exception
+            self.r.set(f"user:{email}", pickle.dumps(user))
+            self.r.expire(f"user:{email}", 900)
+        else:
+            user = pickle.loads(user)
         return user
 
     def create_email_token(self, data: dict):

@@ -41,3 +41,9 @@ async def update_avatar(email, url: str, db: Session) -> User:
     user.avatar = url
     db.commit()
     return user
+
+async def create_new_password(email, password, url: str, db: Session):
+    user = await get_user_by_email(email, db)
+    user.password = password
+    db.commit()
+    return user

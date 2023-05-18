@@ -13,10 +13,9 @@ from fastapi_limiter.depends import RateLimiter
 
 router = APIRouter(prefix='/contacts', tags=["contacts"])
 
-
-@router.get("/")
-def root():
-    return {"message": "Welcome to API!"}
+# @router.get("/")
+# def root():
+#     return {"message": "Welcome to API!"}
 
 
 @router.post("/", response_model=ContactResponse, status_code=status.HTTP_201_CREATED, dependencies=[Depends(RateLimiter(times=10, seconds=60))])

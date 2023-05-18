@@ -30,7 +30,7 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
     user = await repository_users.get_user_by_email(body.username, db)
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email")
-    if not user.confirmed:
+    if not user.confirmed_email:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Email not confirmed")
     if not auth_service.verify_password(body.password, user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
@@ -61,7 +61,7 @@ async def confirmed_email(token: str, db: Session = Depends(get_db)):
     user = await repository_users.get_user_by_email(email, db)
     if user is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Verification error")
-    if user.confirmed:
+    if user.confirmed_email:
         return {"message": "Your email is already confirmed"}
     await repository_users.confirmed_email(email, db)
     return {"message": "Email confirmed"}
@@ -77,3 +77,4 @@ async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, r
     if user:
         background_tasks.add_task(send_email, user.email, user.username, request.base_url)
     return {"message": "Check your email for confirmation."}
+

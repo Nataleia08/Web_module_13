@@ -7,6 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+@app.get("/")
+def root():
+    return {"message": "Welcome to API!"}
+
+
 app.include_router(auth.router, prefix='/api')
 app.include_router(contact.router, prefix='/api')
 app.include_router(users.router, prefix='/api')
