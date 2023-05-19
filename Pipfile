@@ -21,6 +21,10 @@ python-dotenv = "*"
 fastapi-limiter = "*"
 cloudinary = "*"
 ratelimiter = "*"
+django-environ = "*"
+django = "*"
+environ = "*"
+pillow = "*"
 
 [dev-packages]
 
